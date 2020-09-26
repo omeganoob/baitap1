@@ -1,14 +1,30 @@
 <?php
     session_start();
     $err="";
+
+    $conn = mysqli_connect("localhost","root","","banhang");
     if($_SERVER['REQUEST_METHOD'] == "POST") {
-        if($_POST['password'] == $_POST['repass']) {
+        if(!isExisted($conn, $_POST['username'])) {
+            $add = "INSERT INTO `taikhoan`(`username`,`password`,`permission`) VALUES ('".$_POST['username']."','".$_POST['password']."','user')";
+            $adduser = mysqli_query($conn, $add);
+            echo "<script>window.alert('Đăng ký thành công')</script>";
             $_SESSION['username'] = $_POST['username'];
-            $_SESSION['password'] = $_POST['password'];
-            header("location:home.php");
+            header('location: home.php');
         } else {
-            $err = "Mật phải trùng nhau";
+            echo  "<script>window.alert('Tên đã tồn tại')</script>";
         }
+    }
+?>
+<?php
+    function isExisted($conn, $username) {
+        $query = "SELECT * FROM `taikhoan`";
+        $getuser = mysqli_query($conn, $query);
+        while($account = mysqli_fetch_assoc($getuser)) {
+            if($username == $account['username']) {
+                return true;
+            }
+        }
+        return false;
     }
 ?>
 <!DOCTYPE html>
@@ -125,7 +141,7 @@
             <input type="password" name="password" placeholder="Mật khẩu" required>
             <input type="password" name="repass" placeholder="Xác nhận mật khẩu" require>
             <p class="text-danger"> <?php echo $err ?> </p>
-            <input type="submit" name="Login" value="Đăng nhập">
+            <input type="submit" name="Login" value="Đăng ký">
 			<div class="links">
 				<a href="login.php">Đăng nhập</a>
 			</div>

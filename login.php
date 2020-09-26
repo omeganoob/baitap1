@@ -136,7 +136,7 @@
             <input type="submit" name="Login" value="Đăng nhập">
             <p class="text-danger"><?php echo $err ?></p>
 			<div class="links">
-				<a href="signup.php">Đăng ký</a>
+				<a href="signup2.php">Đăng ký</a>
 			</div>
 			</button>
 		</form>
