@@ -9,13 +9,25 @@
             <a href="products.php" class="nav-link">Sản phẩm</a>
         </li>
         <?php
-            if($_SESSION['username'] == 'admin') {
+            $conn = mysqli_connect("localhost","root","","banhang");
+
+            if(isAdmin($_SESSION['username'], $conn)) {
                 echo '<li>
                         <a class="nav-link" href="categoryManage.php">Quản lý danh mục</a> 
                     </li>
                     <li>
                         <a class="nav-link" href="productManage.php">Quản lý hàng hóa</a>
                     </li>';
+            }
+
+            function isAdmin($username, $conn){
+                $query = "SELECT * FROM `taikhoan` WHERE `username` =".$username;
+                $getuser = mysqli_query($conn, $query);
+                $info = mysqli_fetch_assoc($getuser);
+                if($info['permission'] == "admin") {
+                    return true;
+                }
+                return false;
             }
         ?>
     </ul>

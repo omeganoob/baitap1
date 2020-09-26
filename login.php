@@ -1,23 +1,23 @@
 <?php
     session_start();
     session_unset();
+
+    $conn = mysqli_connect("localhost","root","","banhang");
+
     $err="";
     if($_SERVER['REQUEST_METHOD'] == "POST") {
-        if($_POST['username'] == 'admin') {
-            if($_POST['password'] != '123') {
-                $err="mật khẩu không đúng";
-                session_unset();
-            } else {
-                $_SESSION['username'] = $_POST['username'];
-                $_SESSION['password'] = $_POST['password'];
-                header("location:home.php");
-            }
+        $query = "SELECT * FROM `taikhoan` WHERE `username` = ".$_POST["username"];
+        $get = mysqli_query($conn, $query);
+        $info = mysqli_fetch_row($get);
+        if($info < 0) {
+            $err = "Tên không tồn tại";
         } else {
-            $_SESSION['username'] = $_POST['username'];
-            $_SESSION['password'] = $_POST['password'];
-            header("location:home.php");
+            if($_POST['password'] == $info[2]) {
+                $_SESSION["username"] == $info[1];
+            } else {
+                $err = "Sai mật khẩu";
+            }
         }
-        
     }
 ?>
 
@@ -136,7 +136,7 @@
             <input type="submit" name="Login" value="Đăng nhập">
             <p class="text-danger"><?php echo $err ?></p>
 			<div class="links">
-				<a href="signup2.php">Đăng ký</a>
+				<a href="signup.php">Đăng ký</a>
 			</div>
 			</button>
 		</form>
